@@ -1,0 +1,85 @@
+<form class="grid gap-4" [formGroup]="fg" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="flex flex-col gap-1">
+      <label for="admin-register-name" class="text-slate-700 font-semibold dark:text-slate-200">{{ 'AUTH.NAME' | translate }}</label>
+      <app-input-error-message [fc]="fg.controls.name" />
+      <input
+        pInputText
+        formControlName="name"
+        type="text"
+        id="admin-register-name"
+        class="w-full"
+        [placeholder]="'AUTH.NAME_PLACEHOLDER' | translate"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="admin-register-email" class="text-slate-700 font-semibold dark:text-slate-200">{{ 'AUTH.EMAIL' | translate }}</label>
+      <app-input-error-message [fc]="fg.controls.email" />
+      <input
+        pInputText
+        formControlName="email"
+        type="email"
+        id="admin-register-email"
+        class="w-full"
+        [placeholder]="'AUTH.EMAIL_PLACEHOLDER' | translate"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="admin-register-phone" class="text-slate-700 font-semibold dark:text-slate-200">{{ 'AUTH.PHONE' | translate }}</label>
+      <app-input-error-message [fc]="fg.controls.phone" />
+      <input
+        pInputText
+        formControlName="phone"
+        type="tel"
+        id="admin-register-phone"
+        class="w-full"
+        [placeholder]="'AUTH.PHONE_PLACEHOLDER' | translate"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-slate-700 font-semibold dark:text-slate-200">{{ 'AUTH.COUNTRY' | translate }}</label>
+      <app-input-error-message [fc]="fg.controls.country" />
+      <app-country-select formControlName="country" />
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="flex flex-col gap-1">
+      <label for="admin-register-password" class="text-slate-700 font-semibold dark:text-slate-200">{{ 'AUTH.PASSWORD' | translate }}</label>
+      <app-input-error-message [fc]="fg.controls.password" />
+      <p-password
+        inputId="admin-register-password"
+        class="w-full"
+        styleClass="w-full"
+        formControlName="password"
+        [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
+        [toggleMask]="true"
+        [feedback]="false"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="admin-register-password-confirmation" class="text-slate-700 font-semibold dark:text-slate-200">{{ 'AUTH.CONFIRM_PASSWORD' | translate }}</label>
+      <app-input-error-message [fc]="fg.controls.password_confirmation" />
+      <p-password
+        inputId="admin-register-password-confirmation"
+        class="w-full"
+        styleClass="w-full"
+        formControlName="password_confirmation"
+        [placeholder]="'AUTH.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
+        [toggleMask]="true"
+        [feedback]="false"
+      />
+    </div>
+  </div>
+
+  <p-button
+    type="submit"
+    styleClass="w-full"
+    [label]="'AUTH.REGISTER_ADMIN' | translate"
+    [loading]="isSubmitting()"
+  />
+</form>

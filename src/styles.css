@@ -1,3 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+@import "primeicons/primeicons.css";
+@import "./app/styles/primeng-overrides/buttons.css";
+@import "./app/styles/primeng-overrides/inputs.css";
+@import "./app/styles/primeng-overrides/paginator.css";
+/* dark mode configuration */
+@custom-variant dark (&:where(.app-dark, .app-dark *));     

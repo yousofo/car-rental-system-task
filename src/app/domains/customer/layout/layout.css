@@ -1,0 +1,7 @@
+/* Tailwind for everything except radial-gradient backgrounds */
+.domain-shell {
+  background: radial-gradient(circle at top left, rgba(16, 185, 129, 0.1), transparent 28%), #e2e8f0;
+}
+:host-context(.app-dark) .domain-shell {
+  background: radial-gradient(circle at top left, rgba(20, 184, 166, 0.11), transparent 28%), #020617;
+}

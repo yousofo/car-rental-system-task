@@ -1,0 +1,4 @@
+/* Tailwind-only — ng-deep overrides kept when necessary */
+:host ::ng-deep .p-progressbar {
+  border-radius: 0;
+}

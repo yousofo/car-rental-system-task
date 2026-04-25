@@ -1,0 +1,6 @@
+/* Tailwind-only component — all styling in the template */
+@media (max-width: 880px) {
+  .order-layout {
+    grid-template-columns: 1fr !important;
+  }
+}

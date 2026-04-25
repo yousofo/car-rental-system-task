@@ -1,0 +1,106 @@
+<section class="grid gap-4">
+  <div class="flex gap-3 flex-wrap">
+    <a routerLink="/cars" class="inline-flex items-center justify-center px-5 py-3 rounded-full font-bold text-slate-900 no-underline bg-slate-900/10 hover:bg-slate-900/20 transition-colors dark:text-white dark:bg-white/10 dark:hover:bg-white/20">
+      {{ 'CUSTOMER_CARS.BACK_TO_LIST' | translate }}
+    </a>
+    <a routerLink="/orders" class="inline-flex items-center justify-center px-5 py-3 rounded-full font-bold text-slate-900 no-underline bg-slate-900/10 hover:bg-slate-900/20 transition-colors dark:text-white dark:bg-white/10 dark:hover:bg-white/20">
+      {{ 'CUSTOMER_ORDERS.BROWSE_ORDERS' | translate }}
+    </a>
+  </div>
+
+  @if (loading) {
+    <article class="grid gap-4 p-6 rounded-[1.75rem] bg-white/80 border border-slate-300/20 dark:bg-slate-900/80 dark:border-slate-700/20">
+      <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ 'CUSTOMER_ORDERS.LOADING_ORDER_FLOW' | translate }}</h1>
+    </article>
+  } @else if (!car || requestFailed) {
+    <article class="grid gap-4 p-6 rounded-[1.75rem] bg-white/80 border border-slate-300/20 dark:bg-slate-900/80 dark:border-slate-700/20">
+      <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ 'CUSTOMER_ORDERS.CREATE_ERROR_TITLE' | translate }}</h1>
+      <p class="text-slate-600 dark:text-slate-300">{{ 'CUSTOMER_ORDERS.CREATE_ERROR_COPY' | translate }}</p>
+    </article>
+  } @else {
+    <div class="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-4 items-start">
+      <article class="relative grid gap-4 p-0 rounded-[1.75rem] bg-white/80 border border-slate-300/20 text-slate-900 dark:bg-slate-900/80 dark:border-slate-700/20 dark:text-white">
+        <div class="h-2 bg-gradient-to-r from-blue-500 to-slate-700 rounded-t-[1.75rem]"></div>
+        <div class="px-6 pb-6">
+          <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">{{ 'CUSTOMER_ORDERS.CREATE_KICKER' | translate }}</span>
+          <h1 class="mt-2 text-3xl font-bold">{{ 'CUSTOMER_ORDERS.CREATE_TITLE' | translate }}</h1>
+          <p class="mt-2 text-slate-500 dark:text-slate-400">{{ 'CUSTOMER_ORDERS.CREATE_COPY' | translate }}</p>
+
+          <form class="grid gap-4 mt-4" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));" [formGroup]="orderForm" (ngSubmit)="submit()">
+            <label class="grid gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+              <span>{{ 'CUSTOMER_ORDERS.DELIVERY_DATE' | translate }}</span>
+              <p-datepicker formControlName="delivery_date" class="w-full" styleClass="w-full" dateFormat="yy-mm-dd" [showIcon]="true" [minDate]="minDeliveryDate" />
+              @if (orderForm.controls.delivery_date.touched && orderForm.controls.delivery_date.errors?.['minDate']) {
+                <p class="text-red-700 text-sm font-bold dark:text-red-400">{{ 'CUSTOMER_ORDERS.DELIVERY_DATE_MIN_ERROR' | translate }}</p>
+              }
+            </label>
+            <label class="grid gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+              <span>{{ 'CUSTOMER_ORDERS.RECEIVING_DATE' | translate }}</span>
+              <p-datepicker formControlName="receiving_date" class="w-full" styleClass="w-full" dateFormat="yy-mm-dd" [showIcon]="true" [minDate]="minReceivingDate" />
+              @if (orderForm.controls.receiving_date.touched && orderForm.errors?.['invalidDateRange']) {
+                <p class="text-red-700 text-sm font-bold dark:text-red-400">{{ 'CUSTOMER_ORDERS.RECEIVING_DATE_AFTER_ERROR' | translate }}</p>
+              }
+            </label>
+            <label class="grid gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+              <span>{{ 'CUSTOMER_ORDERS.PAYMENT_TYPE' | translate }}</span>
+              <p-select [options]="paymentTypeOptions" optionValue="value" formControlName="payment_type" class="w-full" styleClass="w-full">
+                <ng-template #selectedItem let-option>{{ option.label | translate }}</ng-template>
+                <ng-template #item let-option>{{ option.label | translate }}</ng-template>
+              </p-select>
+            </label>
+            <label class="grid gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+              <span>{{ 'CUSTOMER_ORDERS.ORDER_TYPE' | translate }}</span>
+              <p-select [options]="orderTypeOptions" optionValue="value" formControlName="order_type" class="w-full" styleClass="w-full">
+                <ng-template #selectedItem let-option>{{ option.label | translate }}</ng-template>
+                <ng-template #item let-option>{{ option.label | translate }}</ng-template>
+              </p-select>
+            </label>
+
+            @if (orderForm.controls.order_type.value === 'installments') {
+              <label class="grid gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+                <span>{{ 'CUSTOMER_ORDERS.DOWN_PAYMENT' | translate }}</span>
+                <input pInputText type="number" min="0" formControlName="down_payment" class="w-full" />
+              </label>
+              <label class="grid gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+                <span>{{ 'CUSTOMER_ORDERS.NUMBER_OF_INSTALLMENTS' | translate }}</span>
+                <input pInputText type="number" min="2" formControlName="number_of_installments" class="w-full" />
+              </label>
+            }
+
+
+
+            @if (requestFailed) {
+              <p class="text-red-700 font-bold dark:text-red-400">{{ 'CUSTOMER_ORDERS.CREATE_SUBMIT_ERROR' | translate }}</p>
+            }
+
+            <div class="col-span-full">
+              <p-button type="submit" [label]="submitting ? ('CUSTOMER_ORDERS.SUBMITTING' | translate) : ('CUSTOMER_ORDERS.SUBMIT' | translate)" icon="pi pi-check" [loading]="submitting" />
+            </div>
+          </form>
+        </div>
+      </article>
+
+      <aside class="relative grid gap-4 p-0 rounded-[1.75rem] bg-white/80 border border-slate-300/20 text-slate-900 dark:bg-slate-900/80 dark:border-slate-700/20 dark:text-white">
+        <div class="h-2 bg-gradient-to-r from-blue-500 to-slate-700 rounded-t-[1.75rem]"></div>
+        <div class="px-6 pb-6">
+          <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">{{ 'CUSTOMER_ORDERS.SUMMARY_KICKER' | translate }}</span>
+          <h2 class="mt-2 text-2xl font-bold">{{ car.name }}</h2>
+          <p class="text-slate-500 dark:text-slate-400">{{ car.brand }} {{ car.model }}</p>
+
+          <div class="flex justify-between gap-4 py-3.5 border-b border-slate-300/20 dark:border-slate-700/20">
+            <span class="text-slate-500 dark:text-slate-400">{{ 'CUSTOMER_ORDERS.PRICE_PER_DAY' | translate }}</span>
+            <strong>${{ car.pricePerDay }}</strong>
+          </div>
+          <div class="flex justify-between gap-4 py-3.5 border-b border-slate-300/20 dark:border-slate-700/20">
+            <span class="text-slate-500 dark:text-slate-400">{{ 'CUSTOMER_ORDERS.DAYS' | translate }}</span>
+            <strong>{{ rentalDays }}</strong>
+          </div>
+          <div class="flex justify-between gap-4 py-3.5 border-b border-slate-300/20 dark:border-slate-700/20">
+            <span class="text-slate-500 dark:text-slate-400">{{ 'CUSTOMER_ORDERS.TOTAL_PRICE' | translate }}</span>
+            <strong class="text-xl">${{ totalPrice }}</strong>
+          </div>
+        </div>
+      </aside>
+    </div>
+  }
+</section>

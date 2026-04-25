@@ -1,0 +1,82 @@
+<section class="grid gap-5">
+  <div class="flex gap-3 flex-wrap">
+    <a routerLink="/admin/users" class="inline-flex items-center justify-center px-4 py-2.5 rounded-full font-bold bg-slate-200/80 text-slate-900 hover:bg-slate-300/80 transition-colors dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+      {{ 'ADMIN_USERS.BACK_TO_LIST' | translate }}
+    </a>
+  </div>
+
+  @if (loading) {
+    <article class="grid gap-4 p-6 rounded-3xl bg-white/80 border border-slate-300/20 dark:bg-slate-900/80">
+      <p class="text-slate-600 dark:text-slate-300">{{ 'ADMIN_USERS.LOADING_DETAILS' | translate }}</p>
+    </article>
+  } @else if (failed || !user) {
+    <article class="grid gap-4 p-6 rounded-3xl bg-white/80 border border-slate-300/20 dark:bg-slate-900/80">
+      <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ 'ADMIN_USERS.DETAILS_ERROR_TITLE' | translate }}</h1>
+      <p class="text-slate-600 dark:text-slate-300">{{ 'ADMIN_USERS.DETAILS_ERROR_COPY' | translate }}</p>
+    </article>
+  } @else {
+    <article class="grid gap-5 p-6 rounded-3xl bg-white/80 border border-slate-300/20 dark:bg-slate-900/80">
+      <div class="flex justify-between gap-4 flex-wrap items-start">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">{{ 'ADMIN_USERS.DETAILS_KICKER' | translate }}</span>
+          <h1 class="mt-2 text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">{{ user.name }}</h1>
+          <p class="mt-1 text-slate-600 dark:text-slate-300">{{ user.email }}</p>
+        </div>
+        <span class="inline-flex px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-br from-blue-600 to-slate-900">
+          {{ user.role }}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="grid gap-1 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800">
+          <span class="text-sm text-slate-500 dark:text-slate-400">{{ 'ADMIN_USERS.ID' | translate }}</span>
+          <strong class="text-lg text-slate-900 dark:text-white">#{{ user.id }}</strong>
+        </div>
+        <div class="grid gap-1 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800">
+          <span class="text-sm text-slate-500 dark:text-slate-400">{{ 'ADMIN_USERS.PHONE' | translate }}</span>
+          <strong class="text-lg text-slate-900 dark:text-white">{{ user.phone ?? '-' }}</strong>
+        </div>
+        <div class="grid gap-1 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800">
+          <span class="text-sm text-slate-500 dark:text-slate-400">{{ 'ADMIN_USERS.COUNTRY' | translate }}</span>
+          <strong class="text-lg text-slate-900 dark:text-white">{{ user.country ?? '-' }}</strong>
+        </div>
+        <div class="grid gap-1 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800">
+          <span class="text-sm text-slate-500 dark:text-slate-400">{{ 'ADMIN_USERS.WALLET' | translate }}</span>
+          <strong class="text-lg text-slate-900 dark:text-white">${{ user.wallet ?? 0 }}</strong>
+        </div>
+        <div class="grid gap-1 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800">
+          <span class="text-sm text-slate-500 dark:text-slate-400">{{ 'ADMIN_USERS.CREATED_AT' | translate }}</span>
+          <strong class="text-lg text-slate-900 dark:text-white">{{ user.created_at | date: 'mediumDate' }}</strong>
+        </div>
+      </div>
+
+      @if (user.orders.length) {
+        <div class="grid gap-4">
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ 'ADMIN_USERS.ORDERS_TITLE' | translate }}</h2>
+          <div class="overflow-x-auto rounded-3xl">
+            <table class="w-full text-sm bg-white/60 dark:bg-slate-800/60">
+              <thead>
+                <tr class="bg-slate-100 dark:bg-slate-800">
+                  <th class="px-4 py-3 text-left font-bold text-slate-700 dark:text-slate-200">#</th>
+                  <th class="px-4 py-3 text-left font-bold text-slate-700 dark:text-slate-200">{{ 'ADMIN_USERS.ORDER_CAR' | translate }}</th>
+                  <th class="px-4 py-3 text-left font-bold text-slate-700 dark:text-slate-200">{{ 'ADMIN_USERS.ORDER_TOTAL' | translate }}</th>
+                  <th class="px-4 py-3 text-left font-bold text-slate-700 dark:text-slate-200">{{ 'ADMIN_USERS.ORDER_STATUS' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (order of user.orders; track order.id) {
+                  <tr class="border-b border-slate-200/50 dark:border-slate-700/50">
+                    <td class="px-4 py-3">{{ order.id }}</td>
+                    <td class="px-4 py-3">{{ order.car?.name ?? '-' }}</td>
+                    <td class="px-4 py-3">${{ order.total_price }}</td>
+                    <td class="px-4 py-3">{{ order.payment_status }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    </article>
+  }
+</section>

@@ -1,0 +1,82 @@
+<header class="sticky top-0 z-50 px-4 sm:px-6 py-4 border border-slate-300/20 rounded-3xl bg-white/80 backdrop-blur-md dark:bg-slate-900/80 dark:border-slate-700/20">
+  <div class="flex items-center justify-between gap-4">
+    <a routerLink="/" class="inline-flex items-center gap-3.5 no-underline text-inherit shrink-0">
+      <span class="grid place-items-center w-10 h-10 rounded-xl bg-gradient-to-br from-slate-900 to-blue-600 text-white font-bold text-sm">AD</span>
+      <div>
+        <strong class="block text-sm">AbuDiab</strong>
+        <span class="block text-[11px] text-slate-500 dark:text-slate-400">{{ 'HEADER.TAGLINE' | translate }}</span>
+      </div>
+    </a>
+
+    <!-- Desktop nav -->
+    @if (navLinks().length) {
+      <nav class="hidden md:flex flex-wrap gap-2">
+        @for (link of navLinks(); track link.path) {
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="bg-slate-900 text-white dark:bg-slate-700 dark:text-white"
+            [routerLinkActiveOptions]="{ exact: link.exact }"
+            class="rounded-full py-2 px-4 text-sm font-medium bg-slate-200/75 text-slate-900 cursor-pointer no-underline transition-all duration-200 hover:bg-slate-900 hover:text-white dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white"
+          >
+            {{ link.label | translate }}
+          </a>
+        }
+      </nav>
+    }
+
+    <!-- Desktop actions -->
+    <div class="hidden md:flex items-center gap-2 shrink-0">
+      <button type="button" class="rounded-full py-2 px-4 text-sm font-medium bg-slate-200/75 text-slate-900 cursor-pointer transition-all duration-200 hover:bg-slate-900 hover:text-white dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white" (click)="uiPreferences.toggleLanguage()">
+        {{ uiPreferences.language() === 'ar' ? 'EN' : 'AR' }}
+      </button>
+      <button type="button" class="rounded-full py-2 px-4 text-sm font-medium bg-slate-200/75 text-slate-900 cursor-pointer transition-all duration-200 hover:bg-slate-900 hover:text-white dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white" (click)="uiPreferences.toggleTheme()">
+        {{ uiPreferences.theme() === 'dark' ? ('HEADER.LIGHT' | translate) : ('HEADER.DARK' | translate) }}
+      </button>
+      @if (authService.isAuthenticated()) {
+        <button type="button" class="rounded-full py-2 px-4 text-sm font-medium bg-slate-200/75 text-slate-900 cursor-pointer transition-all duration-200 hover:bg-red-700 hover:text-white dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-red-700 dark:hover:text-white" (click)="logout()">
+          {{ 'HEADER.LOGOUT' | translate }}
+        </button>
+      }
+    </div>
+
+    <!-- Mobile hamburger -->
+    <button type="button" class="md:hidden grid place-items-center w-10 h-10 rounded-xl bg-slate-200/75 text-slate-900 cursor-pointer transition-colors hover:bg-slate-900 hover:text-white dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700" (click)="menuOpen.set(!menuOpen())" [attr.aria-label]="menuOpen() ? 'Close menu' : 'Open menu'">
+      <i class="pi" [class.pi-bars]="!menuOpen()" [class.pi-times]="menuOpen()"></i>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  @if (menuOpen()) {
+    <div class="md:hidden mt-4 pt-4 border-t border-slate-300/20 dark:border-slate-700/20">
+      @if (navLinks().length) {
+        <nav class="flex flex-col gap-2">
+          @for (link of navLinks(); track link.path) {
+            <a
+              [routerLink]="link.path"
+              routerLinkActive="bg-slate-900 text-white dark:bg-slate-700 dark:text-white"
+              [routerLinkActiveOptions]="{ exact: link.exact }"
+              class="rounded-xl py-2.5 px-4 text-sm font-medium bg-slate-200/75 text-slate-900 cursor-pointer no-underline transition-all duration-200 hover:bg-slate-900 hover:text-white dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white"
+              (click)="closeMenu()"
+            >
+              {{ link.label | translate }}
+            </a>
+          }
+        </nav>
+      }
+
+      <div class="flex flex-wrap gap-2 mt-3">
+        <button type="button" class="flex-1 rounded-xl py-2.5 px-4 text-sm font-medium bg-slate-200/75 text-slate-900 cursor-pointer transition-all duration-200 hover:bg-slate-900 hover:text-white dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white" (click)="uiPreferences.toggleLanguage()">
+          {{ uiPreferences.language() === 'ar' ? 'EN' : 'AR' }}
+        </button>
+        <button type="button" class="flex-1 rounded-xl py-2.5 px-4 text-sm font-medium bg-slate-200/75 text-slate-900 cursor-pointer transition-all duration-200 hover:bg-slate-900 hover:text-white dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white" (click)="uiPreferences.toggleTheme()">
+          {{ uiPreferences.theme() === 'dark' ? ('HEADER.LIGHT' | translate) : ('HEADER.DARK' | translate) }}
+        </button>
+        @if (authService.isAuthenticated()) {
+          <button type="button" class="flex-1 rounded-xl py-2.5 px-4 text-sm font-medium bg-slate-200/75 text-slate-900 cursor-pointer transition-all duration-200 hover:bg-red-700 hover:text-white dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-red-700 dark:hover:text-white" (click)="logout(); closeMenu()">
+            {{ 'HEADER.LOGOUT' | translate }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+</header>

@@ -1,0 +1,116 @@
+<section class="grid gap-6">
+  <div>
+    <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">{{ 'ADMIN_ORDERS.KICKER' | translate }}</span>
+    <h1 class="mt-3 text-slate-900 text-4xl md:text-5xl font-bold dark:text-white">{{ 'ADMIN_ORDERS.TITLE' | translate }}</h1>
+    <p class="mt-2 text-slate-600 max-w-2xl dark:text-slate-300">{{ 'ADMIN_ORDERS.COPY' | translate }}</p>
+  </div>
+
+  <form class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8 gap-4 p-5 rounded-3xl bg-white/70 border border-slate-300/20 backdrop-blur-sm dark:bg-slate-900/70" [formGroup]="filtersForm" (ngSubmit)="applyFilters()">
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.SEARCH' | translate }}</span>
+      <input pInputText type="text" formControlName="search" [placeholder]="'ADMIN_ORDERS.SEARCH_PLACEHOLDER' | translate" class="w-full" />
+    </label>
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.USER_ID' | translate }}</span>
+      <input pInputText type="number" min="1" formControlName="user_id" [placeholder]="'ADMIN_ORDERS.USER_ID_PLACEHOLDER' | translate" class="w-full" />
+    </label>
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.CAR_ID' | translate }}</span>
+      <input pInputText type="number" min="1" formControlName="car_id" [placeholder]="'ADMIN_ORDERS.CAR_ID_PLACEHOLDER' | translate" class="w-full" />
+    </label>
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.PAYMENT_TYPE' | translate }}</span>
+      <p-select [options]="paymentTypeOptions" optionValue="value" formControlName="payment_type" class="w-full" styleClass="w-full" [placeholder]="'ADMIN_ORDERS.ALL' | translate">
+        <ng-template #selectedItem let-option>{{ option.label | translate }}</ng-template>
+        <ng-template #item let-option>{{ option.label | translate }}</ng-template>
+      </p-select>
+    </label>
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.PAYMENT_STATUS' | translate }}</span>
+      <p-select [options]="paymentStatusOptions" optionValue="value" formControlName="payment_status" class="w-full" styleClass="w-full" [placeholder]="'ADMIN_ORDERS.ALL' | translate">
+        <ng-template #selectedItem let-option>{{ option.label | translate }}</ng-template>
+        <ng-template #item let-option>{{ option.label | translate }}</ng-template>
+      </p-select>
+    </label>
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.ORDER_TYPE' | translate }}</span>
+      <p-select [options]="orderTypeOptions" optionValue="value" formControlName="order_type" class="w-full" styleClass="w-full" [placeholder]="'ADMIN_ORDERS.ALL' | translate">
+        <ng-template #selectedItem let-option>{{ option.label | translate }}</ng-template>
+        <ng-template #item let-option>{{ option.label | translate }}</ng-template>
+      </p-select>
+    </label>
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.PER_PAGE' | translate }}</span>
+      <p-select [options]="perPageOptions" optionValue="value" formControlName="per_page" class="w-full" styleClass="w-full" />
+    </label>
+    <div class="flex gap-3 flex-wrap items-end">
+      <button type="submit" class="px-5 py-3 rounded-full font-bold text-white bg-gradient-to-br from-blue-600 to-slate-900 hover:opacity-90 transition-opacity">
+        {{ 'ADMIN_ORDERS.APPLY_FILTERS' | translate }}
+      </button>
+      <button type="button" class="px-5 py-3 rounded-full font-bold text-slate-900 bg-slate-200/80 hover:bg-slate-300/80 transition-colors dark:text-white dark:bg-slate-800 dark:hover:bg-slate-700" (click)="resetFilters()">
+        {{ 'ADMIN_ORDERS.RESET_FILTERS' | translate }}
+      </button>
+    </div>
+  </form>
+
+  <div class="flex justify-between gap-4 flex-wrap text-slate-600 dark:text-slate-300">
+    <p>{{ 'ADMIN_ORDERS.RESULTS' | translate:{ count: totalOrders } }}</p>
+    <p>{{ 'ADMIN_ORDERS.ACTIVE_FILTERS' | translate:{ count: activeFiltersCount } }}</p>
+  </div>
+
+  @if (loading) {
+    <p class="text-slate-600 dark:text-slate-300">{{ 'ADMIN_ORDERS.LOADING' | translate }}</p>
+  } @else if (!orders.length) {
+    <article class="grid gap-3 p-6 rounded-3xl bg-white/80 border border-slate-300/20 dark:bg-slate-900/80">
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ 'ADMIN_ORDERS.EMPTY_TITLE' | translate }}</h2>
+      <p class="text-slate-600 dark:text-slate-300">{{ 'ADMIN_ORDERS.EMPTY_COPY' | translate }}</p>
+    </article>
+  } @else {
+    <div class="overflow-x-auto rounded-3xl">
+      <table class="w-full text-sm bg-white/80 dark:bg-slate-900/80">
+        <thead>
+          <tr class="bg-slate-100 dark:bg-slate-800">
+            <th class="px-5 py-4 text-left font-bold text-slate-700 dark:text-slate-200 whitespace-nowrap">{{ 'ADMIN_ORDERS.ID' | translate }}</th>
+            <th class="px-5 py-4 text-left font-bold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.USER' | translate }}</th>
+            <th class="px-5 py-4 text-left font-bold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.CAR' | translate }}</th>
+            <th class="px-5 py-4 text-left font-bold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.PAYMENT_TYPE' | translate }}</th>
+            <th class="px-5 py-4 text-left font-bold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.PAYMENT_STATUS' | translate }}</th>
+            <th class="px-5 py-4 text-left font-bold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.ORDER_TYPE' | translate }}</th>
+            <th class="px-5 py-4 text-left font-bold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.TOTAL' | translate }}</th>
+            <th class="px-5 py-4 text-left font-bold text-slate-700 dark:text-slate-200">{{ 'ADMIN_ORDERS.ACTIONS' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders; track order.id) {
+            <tr class="border-b border-slate-200/50 dark:border-slate-700/50">
+              <td class="px-5 py-4 dark:text-slate-200">{{ order.id }}</td>
+              <td class="px-5 py-4 dark:text-slate-200">{{ order.user?.name ?? '-' }}</td>
+              <td class="px-5 py-4 dark:text-slate-200">{{ order.car?.name ?? '-' }}</td>
+              <td class="px-5 py-4 dark:text-slate-200">{{ ('CUSTOMER_ORDERS.PAYMENT_TYPES.' + order.payment_type.toUpperCase()) | translate }}</td>
+              <td class="px-5 py-4 dark:text-slate-200">
+                <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold" [class]="order.payment_status === 'success' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'">
+                  {{ ('CUSTOMER_ORDERS.PAYMENT_STATUS_VALUES.' + order.payment_status.toUpperCase()) | translate }}
+                </span>
+              </td>
+              <td class="px-5 py-4 dark:text-slate-200">{{ ('CUSTOMER_ORDERS.ORDER_TYPES.' + order.order_type.toUpperCase()) | translate }}</td>
+              <td class="px-5 py-4 dark:text-slate-200">${{ order.total_price }}</td>
+              <td class="px-5 py-4">
+                <a [routerLink]="['/admin/orders', order.id]" class="inline-flex items-center justify-center px-3 py-1.5 rounded-full text-xs font-bold bg-slate-200/80 text-slate-900 hover:bg-slate-300/80 transition-colors dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+                  {{ 'ADMIN_ORDERS.VIEW' | translate }}
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p-paginator
+      [first]="(currentPage - 1) * rows"
+      [rows]="rows"
+      [totalRecords]="totalOrders"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      (onPageChange)="onPageChange($event)"
+    />
+  }
+</section>

@@ -1,1 +1,8 @@
+@if (loadingService.isLoading()) {
+  <div class="fixed top-0 left-0 right-0 z-[1400] pointer-events-none">
+    <p-progressbar mode="indeterminate" [style]="{ height: '6px' }" />
+  </div>
+}
+
+<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" />
 <router-outlet />

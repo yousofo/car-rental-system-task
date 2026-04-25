@@ -1,0 +1,4 @@
+/* Tailwind-only component — all styling in the template */
+:host ::ng-deep .p-skeleton {
+  opacity: 0.85;
+}

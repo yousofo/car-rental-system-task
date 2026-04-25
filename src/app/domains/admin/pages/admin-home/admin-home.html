@@ -1,0 +1,16 @@
+<section class="grid gap-6">
+  <div>
+    <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">{{ 'ADMIN_DASHBOARD.KICKER' | translate }}</span>
+    <h1 class="mt-3 text-slate-900 font-bold dark:text-white" style="font-size: clamp(2rem, 5vw, 3.4rem);">{{ 'ADMIN_DASHBOARD.TITLE' | translate }}</h1>
+    <p class="mt-2 text-slate-600 max-w-[44rem] dark:text-slate-300">{{ 'ADMIN_DASHBOARD.COPY' | translate }}</p>
+  </div>
+
+  <div class="grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+    @for (card of cards; track card.path) {
+      <a class="block p-6 rounded-3xl text-slate-900 no-underline transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl dark:text-white bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-800 dark:to-slate-700" [routerLink]="card.path">
+        <strong class="block">{{ card.title | translate }}</strong>
+        <span class="block mt-2 text-slate-700 dark:text-slate-300">{{ card.copy | translate }}</span>
+      </a>
+    }
+  </div>
+</section>

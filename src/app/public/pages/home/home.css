@@ -1,0 +1,13 @@
+/* Tailwind for everything except radial-gradient backgrounds */
+.page-shell {
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.15), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.12), transparent 28%),
+    #e2e8f0;
+}
+:host-context(.app-dark) .page-shell {
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.14), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(45, 212, 191, 0.12), transparent 28%),
+    #020617;
+}

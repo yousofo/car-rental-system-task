@@ -1,0 +1,18 @@
+<p-select
+  [options]="countries"
+  [(ngModel)]="selectedCode"
+  (onChange)="onDropdownChange($event)"
+  optionLabel="displayName"
+  optionValue="code"
+  [filter]="true"
+  filterBy="searchEn,searchAr"
+  [placeholder]="'FORMS.COUNTRY' | translate"
+  class="w-full"
+>
+  <ng-template #item let-country>
+    <div class="flex align-items-center gap-2">
+      <span>{{ getEmoji(country.code) }}</span>
+      <span>{{ country.displayName }}</span>
+    </div>
+  </ng-template>
+</p-select>

@@ -1,0 +1,32 @@
+/* Minimal CSS: role-switch thumb + radial-gradient backgrounds */
+.role-thumb {
+  position: absolute;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  inset-inline-start: 0.35rem;
+  width: calc(50% - 0.35rem);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1d4ed8, #0f172a);
+  transition: transform 0.2s ease;
+}
+[data-role='admin'] .role-thumb {
+  transform: translateX(100%);
+}
+:host-context([dir='rtl']) [data-role='admin'] .role-thumb {
+  transform: translateX(-100%);
+}
+
+.auth-page {
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.16), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.13), transparent 28%),
+    #e2e8f0;
+}
+:host-context(.app-dark) .auth-page {
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.13), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(45, 212, 191, 0.1), transparent 28%),
+    #020617;
+}
+
+

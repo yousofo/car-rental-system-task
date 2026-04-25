@@ -1,0 +1,93 @@
+<section class="grid gap-6">
+  <div>
+    <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">{{ 'CUSTOMER_CARS.KICKER' | translate }}</span>
+    <h1 class="mt-3 text-slate-900 font-bold dark:text-white" style="font-size: clamp(2rem, 5vw, 3.2rem);">{{ 'CUSTOMER_CARS.TITLE' | translate }}</h1>
+    <p class="mt-2 text-slate-600 dark:text-slate-300">{{ 'CUSTOMER_CARS.COPY' | translate }}</p>
+  </div>
+
+  <form class="grid gap-4 p-5 border border-slate-300/20 rounded-3xl bg-white/70 dark:bg-slate-900/70 dark:border-slate-700/20" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));" [formGroup]="filtersForm" (ngSubmit)="applyFilters()">
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'CUSTOMER_CARS.SEARCH' | translate }}</span>
+      <input pInputText type="text" formControlName="search" [placeholder]="'CUSTOMER_CARS.SEARCH_PLACEHOLDER' | translate" class="w-full" />
+    </label>
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'CUSTOMER_CARS.BRAND' | translate }}</span>
+      <input pInputText type="text" formControlName="brand" [placeholder]="'CUSTOMER_CARS.BRAND_PLACEHOLDER' | translate" class="w-full" />
+    </label>
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'CUSTOMER_CARS.MIN_PRICE' | translate }}</span>
+      <input pInputText type="number" min="0" formControlName="min_price" class="w-full" />
+    </label>
+    <label class="grid gap-1.5">
+      <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'CUSTOMER_CARS.MAX_PRICE' | translate }}</span>
+      <input pInputText type="number" min="0" formControlName="max_price" class="w-full" />
+    </label>
+    <div class="flex gap-3 flex-wrap self-end">
+      <p-button type="submit" [label]="'CUSTOMER_CARS.APPLY_FILTERS' | translate" icon="pi pi-filter" />
+      <p-button type="button" [label]="'CUSTOMER_CARS.RESET_FILTERS' | translate" icon="pi pi-filter-slash" severity="secondary" (onClick)="resetFilters()" />
+    </div>
+  </form>
+
+  <div class="flex justify-between gap-4 flex-wrap text-slate-600 dark:text-slate-300">
+    <p>{{ 'CUSTOMER_CARS.RESULTS' | translate:{ count: totalCars } }}</p>
+    <p>{{ 'CUSTOMER_CARS.ACTIVE_FILTERS' | translate:{ count: activeFiltersCount } }}</p>
+  </div>
+
+  @if (loading) {
+    <div class="grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+      @for (_ of skeletonCards; track $index) {
+        <article class="grid gap-4 p-6 rounded-3xl bg-white/80 border border-slate-300/20 dark:bg-slate-900/80 dark:border-slate-700/20" aria-hidden="true">
+          <div class="flex justify-between gap-4 mb-1 text-sm">
+            <p-skeleton width="30%" height="1rem" />
+            <p-skeleton width="24%" height="1rem" />
+          </div>
+          <p-skeleton width="68%" height="2rem" />
+          <p-skeleton width="52%" height="1.1rem" />
+          <p-skeleton width="40%" height="1.4rem" />
+          <div class="flex gap-3 mt-2">
+            <p-skeleton width="45%" height="2.5rem" />
+            <p-skeleton width="45%" height="2.5rem" />
+          </div>
+        </article>
+      }
+    </div>
+  } @else if (!cars.length) {
+    <p class="text-slate-600 dark:text-slate-300">{{ 'CUSTOMER_CARS.EMPTY' | translate }}</p>
+  } @else {
+    <div class="grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+      @for (car of cars; track car.id) {
+        <article class="group relative p-0 rounded-3xl bg-white/80 border border-slate-300/20 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 dark:bg-slate-900/80 dark:border-slate-700/20">
+          <div class="h-1.5 bg-gradient-to-r from-blue-500 to-slate-700 rounded-t-3xl"></div>
+          <div class="p-6">
+            <div class="flex justify-between gap-4 mb-3 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+              <span>{{ car.brand }}</span>
+              <span>{{ car.model }}</span>
+            </div>
+            <h2 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">{{ car.name }}</h2>
+            <p class="mb-4 text-sm text-slate-500 dark:text-slate-400">{{ 'CUSTOMER_CARS.KILOMETERS' | translate }}: {{ car.kilometers }}</p>
+            <div class="flex items-center gap-2 mb-5">
+              <span class="text-2xl font-bold text-slate-900 dark:text-white">${{ car.pricePerDay }}</span>
+              <span class="text-sm text-slate-500 dark:text-slate-400">/ {{ 'CUSTOMER_CARS.PER_DAY' | translate }}</span>
+            </div>
+            <div class="flex gap-3 flex-wrap">
+              <a [routerLink]="['/cars', car.id]" class="inline-flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-bold text-slate-700 no-underline bg-slate-100 hover:bg-slate-200 transition-colors dark:text-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700">
+                {{ 'CUSTOMER_CARS.VIEW_DETAILS' | translate }}
+              </a>
+              <a [routerLink]="['/orders/new', car.id]" class="inline-flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-bold text-white no-underline bg-blue-600 hover:bg-blue-700 transition-colors dark:bg-blue-600 dark:hover:bg-blue-500">
+                {{ 'CUSTOMER_ORDERS.CREATE_ORDER' | translate }}
+              </a>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <p-paginator
+      [first]="(currentPage - 1) * rows"
+      [rows]="rows"
+      [totalRecords]="totalCars"
+      [rowsPerPageOptions]="[6, 9, 12]"
+      (onPageChange)="onPageChange($event)"
+    />
+  }
+</section>

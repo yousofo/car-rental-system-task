@@ -1,0 +1,54 @@
+<section class="grid gap-5">
+  <div>
+    <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">{{ 'CUSTOMER_INSTALLMENTS.KICKER' | translate }}</span>
+    <h1 class="mt-2 text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">{{ 'CUSTOMER_INSTALLMENTS.TITLE' | translate }}</h1>
+    <p class="mt-2 text-slate-600 dark:text-slate-300">{{ 'CUSTOMER_INSTALLMENTS.COPY' | translate }}</p>
+  </div>
+
+  @if (loading) {
+    <article class="grid gap-4 p-6 rounded-3xl bg-white/80 border border-slate-300/20 dark:bg-slate-900/80 dark:border-slate-700/20">
+      <p class="text-slate-600 dark:text-slate-300">{{ 'CUSTOMER_INSTALLMENTS.LOADING' | translate }}</p>
+    </article>
+  } @else if (!installments.length) {
+    <article class="grid gap-4 p-6 rounded-3xl bg-white/80 border border-slate-300/20 dark:bg-slate-900/80 dark:border-slate-700/20">
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ 'CUSTOMER_INSTALLMENTS.EMPTY_TITLE' | translate }}</h2>
+      <p class="text-slate-600 dark:text-slate-300">{{ 'CUSTOMER_INSTALLMENTS.EMPTY_COPY' | translate }}</p>
+      <a routerLink="/orders" class="inline-flex items-center justify-center w-fit px-5 py-3 rounded-full font-bold text-slate-900 no-underline bg-slate-900/10 hover:bg-slate-900/20 transition-colors dark:text-white dark:bg-white/10 dark:hover:bg-white/20">{{ 'CUSTOMER_ORDERS.BROWSE_ORDERS' | translate }}</a>
+    </article>
+  } @else {
+    <div class="grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+      @for (installment of installments; track installment.id) {
+        <article class="group relative grid gap-3.5 p-0 rounded-3xl bg-white/80 border border-slate-300/20 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 dark:bg-slate-900/80 dark:border-slate-700/20">
+          <div class="h-1.5 bg-gradient-to-r from-blue-500 to-slate-700 rounded-t-3xl"></div>
+          <div class="px-6 pb-6">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-blue-600 dark:text-blue-400">#{{ installment.id }}</span>
+              <span class="text-xs font-bold px-2.5 py-1 rounded-full" [class]="installment.status === 'paid' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'">
+                {{ ('CUSTOMER_INSTALLMENTS.STATUS_VALUES.' + installment.status.toUpperCase()) | translate }}
+              </span>
+            </div>
+            <h2 class="mt-2 text-lg font-bold text-slate-900 dark:text-white">{{ installment.carName ?? ('CUSTOMER_ORDERS.UNKNOWN_CAR' | translate) }}</h2>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="text-2xl font-bold text-slate-900 dark:text-white">${{ installment.amount }}</span>
+              <span class="text-sm text-slate-500 dark:text-slate-400">{{ 'CUSTOMER_INSTALLMENTS.AMOUNT' | translate }}</span>
+            </div>
+            <div class="mt-3 grid gap-1 text-sm text-slate-600 dark:text-slate-300">
+              <p>{{ 'CUSTOMER_INSTALLMENTS.DUE_DATE' | translate }}: <strong class="text-slate-900 dark:text-white">{{ installment.dueDate | date: 'mediumDate' }}</strong></p>
+              <p>{{ 'CUSTOMER_ORDERS.PAYMENT_TYPE' | translate }}: <strong class="text-slate-900 dark:text-white">{{ ('CUSTOMER_ORDERS.PAYMENT_TYPES.' + installment.paymentType.toUpperCase()) | translate }}</strong></p>
+            </div>
+            <div class="flex gap-3 flex-wrap mt-4">
+              <a [routerLink]="['/orders', installment.orderId]" class="inline-flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-bold text-slate-700 no-underline bg-slate-100 hover:bg-slate-200 transition-colors dark:text-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700">
+                {{ 'CUSTOMER_ORDERS.VIEW_ORDER' | translate }}
+              </a>
+              @if (installment.status === 'pending') {
+                <button type="button" class="inline-flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-bold text-white no-underline border-0 bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-70 disabled:cursor-wait dark:bg-blue-600 dark:hover:bg-blue-500" (click)="payInstallment(installment.id)" [disabled]="payingInstallmentId === installment.id">
+                  {{ payingInstallmentId === installment.id ? ('CUSTOMER_INSTALLMENTS.PAYING' | translate) : ('CUSTOMER_INSTALLMENTS.PAY' | translate) }}
+                </button>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
