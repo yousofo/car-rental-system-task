@@ -57,8 +57,8 @@ src/app/
 ├── core/           # interceptors, services, guards, utils
 ├── domains/
 │   ├── admin/      # admin dashboard, cars, users, orders
-│   ├── customer/   # car catalog, orders, installments
-│   └── public/     # home, login, register
+│   └── customer/   # car catalog, orders, installments
+├── public/         # home, login, register
 ├── shared/         # header, layout, reusable components
 └── styles/         # PrimeNG overrides
 ```
