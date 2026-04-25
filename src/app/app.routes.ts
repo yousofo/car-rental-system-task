@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Login } from './public/pages/login/login';
 import { Register } from './public/pages/register/register';
 import { Home } from './public/pages/home/home';
-import { adminMatchGuard, customerMatchGuard } from './core/guards/auth.guards';
+import { adminMatchGuard, customerMatchGuard, guestOnlyGuard } from './core/guards/auth.guards';
 
 export const routes: Routes = [
   //public
@@ -10,14 +10,17 @@ export const routes: Routes = [
     path: '',
     component: Home,
     pathMatch: 'full',
+    canActivate: [guestOnlyGuard],
   },
   {
     path: 'login',
     component: Login,
+    canActivate: [guestOnlyGuard],
   },
   {
     path: 'register',
     component: Register,
+    canActivate: [guestOnlyGuard],
   },
   {
     path: 'admin',
